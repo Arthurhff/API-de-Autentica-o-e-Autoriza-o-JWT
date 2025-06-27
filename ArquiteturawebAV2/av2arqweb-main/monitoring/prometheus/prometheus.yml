@@ -1,0 +1,40 @@
+global:
+  scrape_interval: 15s # Coleta métricas a cada 15 segundos
+  evaluation_interval: 15s # Avalia regras a cada 15 segundos
+
+# Configurações de alertas (opcional)
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# Configurações de alertas (opcional)
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Configuração dos targets para coleta de métricas
+scrape_configs:
+  # Métricas do próprio Prometheus
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Métricas da API Spring Boot
+  - job_name: 'spring-boot-api'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8080'] # Para Docker Desktop no Windows
+        labels:
+          application: 'authenticuser-api'
+          environment: 'development'
+    scrape_interval: 10s # Coleta mais frequentemente para APIs
+    scrape_timeout: 5s
+
+  # Métricas do sistema (opcional)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['host.docker.internal:9100']
+        labels:
+          job: 'node-exporter' 

@@ -1,0 +1,381 @@
+{
+    "dashboard": {
+        "id": null,
+        "title": "Spring Boot API - AuthenticUser",
+        "tags": [
+            "spring-boot",
+            "api",
+            "monitoring"
+        ],
+        "style": "dark",
+        "timezone": "browser",
+        "panels": [
+            {
+                "id": 1,
+                "title": "HTTP Requests Total",
+                "type": "stat",
+                "targets": [
+                    {
+                        "expr": "sum(rate(http_server_requests_seconds_count{application=\"authenticuser-api\"}[5m]))",
+                        "legendFormat": "Requests/sec"
+                    }
+                ],
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "palette-classic"
+                        },
+                        "custom": {
+                            "displayMode": "list"
+                        },
+                        "mappings": [],
+                        "thresholds": {
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "red",
+                                    "value": 80
+                                }
+                            ]
+                        }
+                    }
+                },
+                "gridPos": {
+                    "h": 8,
+                    "w": 6,
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            {
+                "id": 2,
+                "title": "HTTP Response Time (95th percentile)",
+                "type": "stat",
+                "targets": [
+                    {
+                        "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{application=\"authenticuser-api\"}[5m])) by (le))",
+                        "legendFormat": "95th percentile"
+                    }
+                ],
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "palette-classic"
+                        },
+                        "custom": {
+                            "displayMode": "list"
+                        },
+                        "unit": "s",
+                        "mappings": [],
+                        "thresholds": {
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "yellow",
+                                    "value": 0.5
+                                },
+                                {
+                                    "color": "red",
+                                    "value": 1
+                                }
+                            ]
+                        }
+                    }
+                },
+                "gridPos": {
+                    "h": 8,
+                    "w": 6,
+                    "x": 6,
+                    "y": 0
+                }
+            },
+            {
+                "id": 3,
+                "title": "HTTP Status Codes",
+                "type": "piechart",
+                "targets": [
+                    {
+                        "expr": "sum(rate(http_server_requests_seconds_count{application=\"authenticuser-api\"}[5m])) by (status)",
+                        "legendFormat": "{{status}}"
+                    }
+                ],
+                "gridPos": {
+                    "h": 8,
+                    "w": 6,
+                    "x": 12,
+                    "y": 0
+                }
+            },
+            {
+                "id": 4,
+                "title": "JVM Memory Usage",
+                "type": "gauge",
+                "targets": [
+                    {
+                        "expr": "jvm_memory_used_bytes{application=\"authenticuser-api\", area=\"heap\"} / jvm_memory_max_bytes{application=\"authenticuser-api\", area=\"heap\"} * 100",
+                        "legendFormat": "Heap Usage %"
+                    }
+                ],
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "palette-classic"
+                        },
+                        "custom": {
+                            "displayMode": "gauge"
+                        },
+                        "mappings": [],
+                        "max": 100,
+                        "min": 0,
+                        "thresholds": {
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "yellow",
+                                    "value": 70
+                                },
+                                {
+                                    "color": "red",
+                                    "value": 90
+                                }
+                            ]
+                        },
+                        "unit": "percent"
+                    }
+                },
+                "gridPos": {
+                    "h": 8,
+                    "w": 6,
+                    "x": 18,
+                    "y": 0
+                }
+            },
+            {
+                "id": 5,
+                "title": "HTTP Requests Rate",
+                "type": "graph",
+                "targets": [
+                    {
+                        "expr": "sum(rate(http_server_requests_seconds_count{application=\"authenticuser-api\"}[1m])) by (status)",
+                        "legendFormat": "{{status}}"
+                    }
+                ],
+                "gridPos": {
+                    "h": 8,
+                    "w": 12,
+                    "x": 0,
+                    "y": 8
+                }
+            },
+            {
+                "id": 6,
+                "title": "Response Time Distribution",
+                "type": "graph",
+                "targets": [
+                    {
+                        "expr": "histogram_quantile(0.5, sum(rate(http_server_requests_seconds_bucket{application=\"authenticuser-api\"}[5m])) by (le))",
+                        "legendFormat": "50th percentile"
+                    },
+                    {
+                        "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{application=\"authenticuser-api\"}[5m])) by (le))",
+                        "legendFormat": "95th percentile"
+                    },
+                    {
+                        "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{application=\"authenticuser-api\"}[5m])) by (le))",
+                        "legendFormat": "99th percentile"
+                    }
+                ],
+                "gridPos": {
+                    "h": 8,
+                    "w": 12,
+                    "x": 12,
+                    "y": 8
+                }
+            },
+            {
+                "id": 7,
+                "title": "JVM Threads",
+                "type": "stat",
+                "targets": [
+                    {
+                        "expr": "jvm_threads_live_threads{application=\"authenticuser-api\"}",
+                        "legendFormat": "Live Threads"
+                    }
+                ],
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "palette-classic"
+                        },
+                        "custom": {
+                            "displayMode": "list"
+                        },
+                        "mappings": [],
+                        "thresholds": {
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "yellow",
+                                    "value": 50
+                                },
+                                {
+                                    "color": "red",
+                                    "value": 100
+                                }
+                            ]
+                        }
+                    }
+                },
+                "gridPos": {
+                    "h": 8,
+                    "w": 6,
+                    "x": 0,
+                    "y": 16
+                }
+            },
+            {
+                "id": 8,
+                "title": "Database Connections",
+                "type": "stat",
+                "targets": [
+                    {
+                        "expr": "hikaricp_connections_active{application=\"authenticuser-api\"}",
+                        "legendFormat": "Active Connections"
+                    }
+                ],
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "palette-classic"
+                        },
+                        "custom": {
+                            "displayMode": "list"
+                        },
+                        "mappings": [],
+                        "thresholds": {
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "yellow",
+                                    "value": 5
+                                },
+                                {
+                                    "color": "red",
+                                    "value": 10
+                                }
+                            ]
+                        }
+                    }
+                },
+                "gridPos": {
+                    "h": 8,
+                    "w": 6,
+                    "x": 6,
+                    "y": 16
+                }
+            },
+            {
+                "id": 9,
+                "title": "System CPU Usage",
+                "type": "stat",
+                "targets": [
+                    {
+                        "expr": "system_cpu_usage{application=\"authenticuser-api\"} * 100",
+                        "legendFormat": "CPU Usage %"
+                    }
+                ],
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "palette-classic"
+                        },
+                        "custom": {
+                            "displayMode": "list"
+                        },
+                        "mappings": [],
+                        "thresholds": {
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "yellow",
+                                    "value": 70
+                                },
+                                {
+                                    "color": "red",
+                                    "value": 90
+                                }
+                            ]
+                        },
+                        "unit": "percent"
+                    }
+                },
+                "gridPos": {
+                    "h": 8,
+                    "w": 6,
+                    "x": 12,
+                    "y": 16
+                }
+            },
+            {
+                "id": 10,
+                "title": "Application Uptime",
+                "type": "stat",
+                "targets": [
+                    {
+                        "expr": "process_uptime_seconds{application=\"authenticuser-api\"}",
+                        "legendFormat": "Uptime"
+                    }
+                ],
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "palette-classic"
+                        },
+                        "custom": {
+                            "displayMode": "list"
+                        },
+                        "mappings": [],
+                        "thresholds": {
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                }
+                            ]
+                        },
+                        "unit": "s"
+                    }
+                },
+                "gridPos": {
+                    "h": 8,
+                    "w": 6,
+                    "x": 18,
+                    "y": 16
+                }
+            }
+        ],
+        "time": {
+            "from": "now-1h",
+            "to": "now"
+        },
+        "refresh": "5s"
+    }
+}
